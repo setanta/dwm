@@ -267,6 +267,15 @@ static void centeredfloatingmaster(Monitor *m);
 static void load_xresources(void);
 static void resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst);
 
+static void shift(unsigned int *tag, int i);
+static void shifttag(const Arg *arg);
+static void shifttagclients(const Arg *arg);
+static void shiftview(const Arg *arg);
+static void shiftviewclients(const Arg *arg);
+static void shiftboth(const Arg *arg);
+static void swaptags(const Arg *arg);
+static void shiftswaptags(const Arg *arg);
+
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
 static Client *swallowingclient(Window w);
@@ -2788,4 +2797,119 @@ bstackhoriz(Monitor *m) {
 				ty += HEIGHT(c);
 		}
 	}
+}
+
+void
+shift(unsigned int *tag, int i)
+{
+	if (i > 0) /* left circular shift */
+		*tag = ((*tag << i) | (*tag >> (LENGTH(tags) - i)));
+	else       /* right circular shift */
+		*tag = (*tag >> (- i) | *tag << (LENGTH(tags) + i));
+}
+
+/* send a window to the next/prev tag */
+static void
+shifttag(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+
+	if (!selmon->clients)
+		return;
+
+	shift(&shifted.ui, arg->i);
+	tag(&shifted);
+}
+
+/* send a window to the next/prev tag that has a client, else it moves it to
+ * the next/prev one. */
+static void
+shifttagclients(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+	Client *c;
+	unsigned int tagmask = 0;
+
+	for (c = selmon->clients; c; c = c->next)
+		tagmask = tagmask | c->tags;
+
+	do
+		shift(&shifted.ui, arg->i);
+	while (tagmask && !(shifted.ui & tagmask));
+
+	tag(&shifted);
+}
+
+/* view the next/prev tag */
+static void
+shiftview(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+
+	shift(&shifted.ui, arg->i);
+	view(&shifted);
+}
+
+/* view the next/prev tag that has a client, else view the next/prev tag */
+static void
+shiftviewclients(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+	Client *c;
+	unsigned int tagmask = 0;
+
+	for (c = selmon->clients; c; c = c->next)
+		tagmask = tagmask | c->tags;
+
+	do
+		shift(&shifted.ui, arg->i);
+	while (tagmask && !(shifted.ui & tagmask));
+
+	view(&shifted);
+}
+
+/* move the active window to the next/prev tag and view it's new tag */
+static void
+shiftboth(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+
+	shift(&shifted.ui, arg->i);
+	tag(&shifted);
+	view(&shifted);
+}
+
+/* swaptags: https://dwm.suckless.org/patches/swaptags, used below */
+static void
+swaptags(const Arg *arg)
+{
+	Client *c;
+	unsigned int newtag = arg->ui & TAGMASK;
+	unsigned int curtag = selmon->tagset[selmon->seltags];
+
+	if (newtag == curtag || !curtag || (curtag & (curtag-1)))
+		return;
+
+	for (c = selmon->clients; c != NULL; c = c->next) {
+		if ((c->tags & newtag) || (c->tags & curtag))
+			c->tags ^= curtag ^ newtag;
+		if (!c->tags)
+			c->tags = newtag;
+	}
+
+	//uncomment to 'view' the new swaped tag
+	//selmon->tagset[selmon->seltags] = newtag;
+
+	focus(NULL);
+	arrange(selmon);
+}
+
+/* swaps "tags" (all the clients on it) with the next/prev tag */
+static void
+shiftswaptags(const Arg *arg)
+{
+	Arg shifted = { .ui = selmon->tagset[selmon->seltags] };
+
+	shift(&shifted.ui, arg->i);
+	swaptags(&shifted);
 }

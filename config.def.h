@@ -123,6 +123,18 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_h,      shiftboth,      {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_h,      shiftswaptags,  {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_l,      shiftboth,      {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_l,      shiftswaptags,  {.i = +1 } },
+	{ MODKEY,                       XK_bracketright, shiftviewclients, { .i = +1 } },
+	{ MODKEY|ShiftMask,             XK_bracketright, shiftview,        { .i = +1 } },
+	{ MODKEY,                       XK_bracketleft,  shiftviewclients, { .i = -1 } },
+	{ MODKEY|ShiftMask,             XK_bracketleft,  shiftview,        { .i = -1 } },
+	{ MODKEY|ControlMask,           XK_bracketright, shifttagclients,  { .i = +1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_bracketright, shifttag,         { .i = +1 } },
+	{ MODKEY|ControlMask,           XK_bracketleft,  shifttagclients,  { .i = -1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_bracketleft,  shifttag,         { .i = -1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
