@@ -3,6 +3,7 @@
 /* appearance */
 static unsigned int borderpx  = 1;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
+static const int rmaster      = 0;        /* 1 means master-area is initially on the right */
 static const int scalepreview = 4;        /* preview scaling (display w and h / scalepreview) */
 static const int previewbar   = 1;        /* show the bar in the preview window */
 static const int swallowfloating    = 0;  /* 1 means swallow floating windows by default */
@@ -128,6 +129,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY,                       XK_r,      togglermaster,  {0} },
 	{ MODKEY|ShiftMask,             XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
