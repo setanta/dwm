@@ -53,6 +53,7 @@ static const Layout layouts[] = {
 	{ ">M>",      centeredfloatingmaster },
 	{ "TTT",      bstack },
 	{ "===",      bstackhoriz },
+	{ NULL,       NULL },
 };
 
 /* key definitions */
@@ -113,6 +114,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[4]} },
 	{ MODKEY|ShiftMask,             XK_u,      setlayout,      {.v = &layouts[5]} },
 	{ MODKEY|ShiftMask,             XK_o,      setlayout,      {.v = &layouts[6]} },
+	{ MODKEY|ControlMask,           XK_comma,  cyclelayout,    {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
