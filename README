@@ -2,6 +2,25 @@ dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
 
+Patches Applied
+---------------
+
+* smartborders
+* fullscreen
+* sticky
+* Xresources
+* centeredmaster
+* bottomstack
+* swallow
+* tag previews
+* shift-tools
+* cyclelayouts
+* stacker
+* rmaster
+* deck layout
+* cfacts
+* pertag
+* gapless grid layout
 
 Requirements
 ------------
